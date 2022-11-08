@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: prometheus
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 30s
+      evaluation_interval: 30s
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets: ['10.102.134.70:9093']
+    rule_files:
+      - /etc/prometheus/rules.yml
+      #- "rules/*.yml"
+      #- "rules/v3/*.yml"
+    scrape_configs:
+      - job_name: 'alertmanager-告警监控管理'
+        metrics_path: /metrics
+        static_configs:
+        - targets: ['172.16.101.218:9093']
+      - job_name: 'prometheus-服务监控管理'
+        static_configs:
+        - targets: ['10.96.38.33:9090']
+      - job_name: 'node'
+        static_configs:
+        - targets: ['172.16.2.253:9100','172.16.2.252:9100','172.16.2.251:9100']
+      - job_name: 'mysql-exporter'
+        metrics_path: /metrics
+        static_configs:
+        - targets: ['172.16.2.251:9104']
+      - job_name: 'cadvisor'
+        static_configs:
+        - targets: ['172.16.2.253:4194','172.16.2.252:4194','172.16.2.251:4194']

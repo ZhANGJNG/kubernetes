@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: mysql-exporter
+  name: mysql-exporter
+  namespace: prometheus
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mysql-exporter
+  template:
+    metadata:
+      labels:
+        app: mysql-exporter
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: mysql-exporter
+        image: harbor.bssdev.com/v5/mysqld-exporter:latest
+        ports:
+          - containerPort: 9104
+            protocol: TCP
+            name:	http
+        env:
+        - name: DATA_SOURCE_NAME
+          value: root:Guiji@123!@(10.105.84.190:3306)/
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/hostname: k8s-node1
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    app: mysql-exporter
+#  name: mysql-exporter-svc
+#  namespace: prometheus
+#spec:
+#  selector:
+#    app: mysql-exporter
+#  ports:
+#    - name: mysql-exporter
+#      port: 9104
+#      targetPort: http
+#  sessionAffinity: None
+#  type: NodePort
