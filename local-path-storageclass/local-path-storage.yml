@@ -104,7 +104,7 @@ data:
             "nodePathMap":[
             {
                     "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
-                    "paths":["/home/loacl-path/k8s"]
+                    "paths":["/home/local-path/k8s"]
             }
             ]
     }
